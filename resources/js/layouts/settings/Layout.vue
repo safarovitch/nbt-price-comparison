@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import Heading from '@/components/Heading.vue';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { toUrl, urlIsActive } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editProfile } from '@/routes/profile';
@@ -39,31 +37,28 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
             description="Manage your profile and account settings"
         />
 
-        <div class="flex flex-col lg:flex-row lg:space-x-12">
-            <aside class="w-full max-w-xl lg:w-48">
-                <nav class="flex flex-col space-y-1 space-x-0">
-                    <Button
+        <div class="d-flex flex-column flex-lg-row gap-4">
+            <aside class="w-100" style="max-width: 12rem;">
+                <nav class="nav flex-column gap-1">
+                    <Link
                         v-for="item in sidebarNavItems"
                         :key="toUrl(item.href)"
-                        variant="ghost"
+                        :href="item.href"
                         :class="[
-                            'w-full justify-start',
-                            { 'bg-muted': urlIsActive(item.href, currentPath) },
+                            'nav-link',
+                            { 'active': urlIsActive(item.href, currentPath) },
                         ]"
-                        as-child
                     >
-                        <Link :href="item.href">
-                            <component :is="item.icon" class="h-4 w-4" />
-                            {{ item.title }}
-                        </Link>
-                    </Button>
+                        <component v-if="item.icon" :is="item.icon" class="me-2" style="width: 1rem; height: 1rem;" />
+                        {{ item.title }}
+                    </Link>
                 </nav>
             </aside>
 
-            <Separator class="my-6 lg:hidden" />
+            <hr class="my-4 d-lg-none" />
 
-            <div class="flex-1 md:max-w-2xl">
-                <section class="max-w-xl space-y-12">
+            <div class="flex-grow-1" style="max-width: 42rem;">
+                <section class="d-flex flex-column gap-5" style="max-width: 36rem;">
                     <slot />
                 </section>
             </div>

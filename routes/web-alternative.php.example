@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * Alternative approach using optional locale parameter
+ * This registers routes only once, but uses middleware to handle locale
+ * 
+ * To use this approach, rename this file to web.php
+ */
+
+use App\Helpers\LocaleHelper;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+$supportedLocales = LocaleHelper::getSupportedLocales();
+$localePattern = implode('|', $supportedLocales);
+
+// Locale switcher route
+Route::middleware('web')->group(function () {
+    Route::get('locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])
+        ->name('locale.switch');
+});
+
+// Single route registration - locale handled by middleware
+Route::middleware('web')->group(function () use ($localePattern) {
+    // Optional locale prefix routes
+    Route::group([
+        'prefix' => '{locale?}',
+        'where' => ['locale' => $localePattern],
+    ], function () {
+        Route::get('/', function () {
+            return Inertia::render('Index');
+        })->name('index');
+
+        Route::get('dashboard', function () {
+            return Inertia::render('Dashboard');
+        })->middleware(['auth', 'verified'])->name('dashboard');
+
+        require __DIR__.'/settings.php';
+    });
+});
+
+/**
+ * Note: This approach requires updating SetLocale middleware to:
+ * 1. Check for locale in route parameters instead of segments
+ * 2. Handle redirects for default locale (remove from URL)
+ * 3. Handle redirects for non-default locales (add to URL)
+ * 
+ * The current closure-based approach is cleaner and more explicit.
+ */

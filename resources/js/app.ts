@@ -6,6 +6,24 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { initializeTheme } from './composables/useAppearance';
 
+// jQuery for theme compatibility
+import jQuery from 'jquery';
+
+// Bootstrap JavaScript
+import * as bootstrap from 'bootstrap';
+
+// Make jQuery and Bootstrap available globally for theme scripts
+declare global {
+    interface Window {
+        $: typeof jQuery;
+        jQuery: typeof jQuery;
+        bootstrap: typeof bootstrap;
+    }
+}
+
+window.$ = window.jQuery = jQuery;
+window.bootstrap = bootstrap;
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({

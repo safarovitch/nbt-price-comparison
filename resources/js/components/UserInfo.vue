@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useInitials } from '@/composables/useInitials';
 import type { User } from '@/types';
 import { computed } from 'vue';
@@ -22,17 +21,29 @@ const showAvatar = computed(
 </script>
 
 <template>
-    <Avatar class="h-8 w-8 overflow-hidden rounded-lg">
-        <AvatarImage v-if="showAvatar" :src="user.avatar!" :alt="user.name" />
-        <AvatarFallback class="rounded-lg text-black dark:text-white">
-            {{ getInitials(user.name) }}
-        </AvatarFallback>
-    </Avatar>
+    <div class="d-flex align-items-center">
+        <div class="flex-shrink-0">
+            <img
+                v-if="showAvatar"
+                :src="user.avatar!"
+                :alt="user.name"
+                class="rounded"
+                style="width: 2rem; height: 2rem; object-fit: cover;"
+            />
+            <div
+                v-else
+                class="rounded d-flex align-items-center justify-content-center bg-secondary text-dark"
+                style="width: 2rem; height: 2rem;"
+            >
+                {{ getInitials(user.name) }}
+            </div>
+        </div>
 
-    <div class="grid flex-1 text-left text-sm leading-tight">
-        <span class="truncate font-medium">{{ user.name }}</span>
-        <span v-if="showEmail" class="truncate text-xs text-muted-foreground">{{
-            user.email
-        }}</span>
+        <div class="flex-grow-1 ms-2 text-start">
+            <div class="fw-medium text-truncate small">{{ user.name }}</div>
+            <div v-if="showEmail" class="text-muted text-truncate" style="font-size: 0.75rem;">
+                {{ user.email }}
+            </div>
+        </div>
     </div>
 </template>

@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import {
-    SidebarGroup,
-    SidebarGroupLabel,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from '@/components/ui/sidebar';
 import { urlIsActive } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
@@ -18,21 +11,21 @@ const page = usePage();
 </script>
 
 <template>
-    <SidebarGroup class="px-2 py-0">
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
-        <SidebarMenu>
-            <SidebarMenuItem v-for="item in items" :key="item.title">
-                <SidebarMenuButton
-                    as-child
-                    :is-active="urlIsActive(item.href, page.url)"
-                    :tooltip="item.title"
-                >
-                    <Link :href="item.href">
-                        <component :is="item.icon" />
-                        <span>{{ item.title }}</span>
-                    </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-        </SidebarMenu>
-    </SidebarGroup>
+    <div class="mb-3">
+        <h6 class="text-muted text-uppercase small mb-2 px-2">Platform</h6>
+        <nav class="nav flex-column">
+            <Link
+                v-for="item in items"
+                :key="item.title"
+                :href="item.href"
+                :class="[
+                    'nav-link',
+                    { 'active': urlIsActive(item.href, page.url) },
+                ]"
+            >
+                <component v-if="item.icon" :is="item.icon" class="me-2" style="width: 1rem; height: 1rem;" />
+                {{ item.title }}
+            </Link>
+        </nav>
+    </div>
 </template>

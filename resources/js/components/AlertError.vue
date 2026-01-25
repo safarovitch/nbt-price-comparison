@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-vue-next';
 import { computed } from 'vue';
 
@@ -16,15 +15,15 @@ const uniqueErrors = computed(() => Array.from(new Set(props.errors)));
 </script>
 
 <template>
-    <Alert variant="destructive">
-        <AlertCircle class="size-4" />
-        <AlertTitle>{{ title }}</AlertTitle>
-        <AlertDescription>
-            <ul class="list-inside list-disc text-sm">
+    <div class="alert alert-danger d-flex align-items-start" role="alert">
+        <AlertCircle class="me-2 flex-shrink-0" style="width: 1rem; height: 1rem; margin-top: 0.125rem;" />
+        <div class="flex-grow-1">
+            <h6 class="alert-heading mb-2">{{ title }}</h6>
+            <ul class="mb-0 ps-3 small">
                 <li v-for="(error, index) in uniqueErrors" :key="index">
                     {{ error }}
                 </li>
             </ul>
-        </AlertDescription>
-    </Alert>
+        </div>
+    </div>
 </template>

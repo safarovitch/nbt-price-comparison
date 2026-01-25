@@ -1,12 +1,5 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    PinInput,
-    PinInputGroup,
-    PinInputSlot,
-} from '@/components/ui/pin-input';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { store } from '@/routes/two-factor/login';
 import { Form, Head } from '@inertiajs/vue3';
@@ -55,48 +48,43 @@ const codeValue = computed<string>(() => code.value.join(''));
     >
         <Head title="Two-Factor Authentication" />
 
-        <div class="space-y-6">
+        <div class="d-flex flex-column gap-3">
             <template v-if="!showRecoveryInput">
                 <Form
                     v-bind="store.form()"
-                    class="space-y-4"
+                    class="d-flex flex-column gap-3"
                     reset-on-error
                     @error="code = []"
                     #default="{ errors, processing, clearErrors }"
                 >
                     <input type="hidden" name="code" :value="codeValue" />
                     <div
-                        class="flex flex-col items-center justify-center space-y-3 text-center"
+                        class="d-flex flex-column align-items-center justify-content-center gap-3 text-center"
                     >
-                        <div class="flex w-full items-center justify-center">
-                            <PinInput
+                        <div class="d-flex w-100 align-items-center justify-content-center">
+                            <input
                                 id="otp"
-                                placeholder="○"
-                                v-model="code"
-                                type="number"
-                                otp
-                            >
-                                <PinInputGroup>
-                                    <PinInputSlot
-                                        v-for="(id, index) in 6"
-                                        :key="id"
-                                        :index="index"
-                                        :disabled="processing"
-                                        autofocus
-                                    />
-                                </PinInputGroup>
-                            </PinInput>
+                                type="text"
+                                class="form-control text-center"
+                                placeholder="000000"
+                                maxlength="6"
+                                pattern="[0-9]{6}"
+                                v-model="codeValue"
+                                :disabled="processing"
+                                autofocus
+                                style="letter-spacing: 0.5em; font-size: 1.5rem; width: 200px;"
+                            />
                         </div>
                         <InputError :message="errors.code" />
                     </div>
-                    <Button type="submit" class="w-full" :disabled="processing"
-                        >Continue</Button
-                    >
-                    <div class="text-center text-sm text-muted-foreground">
+                    <button type="submit" class="btn btn-primary w-100" :disabled="processing">
+                        Continue
+                    </button>
+                    <div class="text-center text-muted small">
                         <span>or you can </span>
                         <button
                             type="button"
-                            class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                            class="btn btn-link p-0 text-decoration-underline"
                             @click="() => toggleRecoveryMode(clearErrors)"
                         >
                             {{ authConfigContent.toggleText }}
@@ -108,27 +96,28 @@ const codeValue = computed<string>(() => code.value.join(''));
             <template v-else>
                 <Form
                     v-bind="store.form()"
-                    class="space-y-4"
+                    class="d-flex flex-column gap-3"
                     reset-on-error
                     #default="{ errors, processing, clearErrors }"
                 >
-                    <Input
+                    <input
                         name="recovery_code"
                         type="text"
+                        class="form-control"
                         placeholder="Enter recovery code"
                         :autofocus="showRecoveryInput"
                         required
                     />
                     <InputError :message="errors.recovery_code" />
-                    <Button type="submit" class="w-full" :disabled="processing"
-                        >Continue</Button
-                    >
+                    <button type="submit" class="btn btn-primary w-100" :disabled="processing">
+                        Continue
+                    </button>
 
-                    <div class="text-center text-sm text-muted-foreground">
+                    <div class="text-center text-muted small">
                         <span>or you can </span>
                         <button
                             type="button"
-                            class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                            class="btn btn-link p-0 text-decoration-underline"
                             @click="() => toggleRecoveryMode(clearErrors)"
                         >
                             {{ authConfigContent.toggleText }}

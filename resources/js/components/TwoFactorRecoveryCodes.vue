@@ -1,13 +1,5 @@
 <script setup lang="ts">
 import AlertError from '@/components/AlertError.vue';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import { regenerateRecoveryCodes } from '@/routes/two-factor';
 import { Form } from '@inertiajs/vue3';
@@ -39,28 +31,35 @@ onMounted(async () => {
 </script>
 
 <template>
-    <Card class="w-full">
-        <CardHeader>
-            <CardTitle class="flex gap-3">
-                <LockKeyhole class="size-4" />2FA Recovery Codes
-            </CardTitle>
-            <CardDescription>
+    <div class="card w-100">
+        <div class="card-header">
+            <h5 class="card-title mb-0 d-flex align-items-center gap-2">
+                <LockKeyhole style="width: 1rem; height: 1rem;" />
+                2FA Recovery Codes
+            </h5>
+            <p class="card-text text-muted small mb-0 mt-2">
                 Recovery codes let you regain access if you lose your 2FA
                 device. Store them in a secure password manager.
-            </CardDescription>
-        </CardHeader>
-        <CardContent>
+            </p>
+        </div>
+        <div class="card-body">
             <div
-                class="flex flex-col gap-3 select-none sm:flex-row sm:items-center sm:justify-between"
+                class="d-flex flex-column gap-3 user-select-none flex-sm-row align-items-sm-center justify-content-sm-between"
             >
-                <Button @click="toggleRecoveryCodesVisibility" class="w-fit">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="toggleRecoveryCodesVisibility"
+                    style="width: fit-content;"
+                >
                     <component
                         :is="isRecoveryCodesVisible ? EyeOff : Eye"
-                        class="size-4"
+                        style="width: 1rem; height: 1rem;"
+                        class="me-1"
                     />
                     {{ isRecoveryCodesVisible ? 'Hide' : 'View' }} Recovery
                     Codes
-                </Button>
+                </button>
 
                 <Form
                     v-if="isRecoveryCodesVisible && recoveryCodesList.length"
@@ -70,36 +69,39 @@ onMounted(async () => {
                     @success="fetchRecoveryCodes"
                     #default="{ processing }"
                 >
-                    <Button
-                        variant="secondary"
+                    <button
                         type="submit"
+                        class="btn btn-secondary"
                         :disabled="processing"
                     >
-                        <RefreshCw /> Regenerate Codes
-                    </Button>
+                        <RefreshCw style="width: 1rem; height: 1rem;" class="me-1" />
+                        Regenerate Codes
+                    </button>
                 </Form>
             </div>
             <div
                 :class="[
-                    'relative overflow-hidden transition-all duration-300',
+                    'position-relative overflow-hidden transition-all',
                     isRecoveryCodesVisible
                         ? 'h-auto opacity-100'
                         : 'h-0 opacity-0',
                 ]"
+                style="transition-duration: 300ms;"
             >
-                <div v-if="errors?.length" class="mt-6">
+                <div v-if="errors?.length" class="mt-4">
                     <AlertError :errors="errors" />
                 </div>
-                <div v-else class="mt-3 space-y-3">
+                <div v-else class="mt-3 d-flex flex-column gap-3">
                     <div
                         ref="recoveryCodeSectionRef"
-                        class="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm"
+                        class="d-grid gap-1 rounded bg-light p-3 font-monospace small"
                     >
-                        <div v-if="!recoveryCodesList.length" class="space-y-2">
+                        <div v-if="!recoveryCodesList.length" class="d-flex flex-column gap-2">
                             <div
                                 v-for="n in 8"
                                 :key="n"
-                                class="h-4 animate-pulse rounded bg-muted-foreground/20"
+                                class="bg-secondary bg-opacity-20 rounded"
+                                style="height: 1rem; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"
                             ></div>
                         </div>
                         <div
@@ -110,14 +112,14 @@ onMounted(async () => {
                             {{ code }}
                         </div>
                     </div>
-                    <p class="text-xs text-muted-foreground select-none">
+                    <p class="text-muted small user-select-none">
                         Each recovery code can be used once to access your
                         account and will be removed after use. If you need more,
                         click
-                        <span class="font-bold">Regenerate Codes</span> above.
+                        <span class="fw-bold">Regenerate Codes</span> above.
                     </p>
                 </div>
             </div>
-        </CardContent>
-    </Card>
+        </div>
+    </div>
 </template>

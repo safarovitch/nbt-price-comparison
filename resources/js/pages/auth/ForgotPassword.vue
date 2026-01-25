@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes';
 import { email } from '@/routes/password';
@@ -24,19 +20,20 @@ defineProps<{
 
         <div
             v-if="status"
-            class="mb-4 text-center text-sm font-medium text-green-600"
+            class="mb-3 text-center small fw-medium text-success"
         >
             {{ status }}
         </div>
 
-        <div class="space-y-6">
+        <div class="d-flex flex-column gap-4">
             <Form v-bind="email.form()" v-slot="{ errors, processing }">
-                <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
-                    <Input
+                <div class="d-flex flex-column gap-2">
+                    <label for="email" class="form-label">Email address</label>
+                    <input
                         id="email"
                         type="email"
                         name="email"
+                        class="form-control"
                         autocomplete="off"
                         autofocus
                         placeholder="email@example.com"
@@ -44,19 +41,25 @@ defineProps<{
                     <InputError :message="errors.email" />
                 </div>
 
-                <div class="my-6 flex items-center justify-start">
-                    <Button
-                        class="w-full"
+                <div class="my-4 d-flex align-items-center justify-content-start">
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
                         :disabled="processing"
                         data-test="email-password-reset-link-button"
                     >
-                        <Spinner v-if="processing" />
+                        <span
+                            v-if="processing"
+                            class="spinner-border spinner-border-sm me-2"
+                            role="status"
+                            aria-hidden="true"
+                        ></span>
                         Email password reset link
-                    </Button>
+                    </button>
                 </div>
             </Form>
 
-            <div class="space-x-1 text-center text-sm text-muted-foreground">
+            <div class="text-center text-muted small">
                 <span>Or, return to</span>
                 <TextLink :href="login()">log in</TextLink>
             </div>

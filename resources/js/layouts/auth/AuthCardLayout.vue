@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { home } from '@/routes';
+import { index } from '@/routes';
 import { Link } from '@inertiajs/vue3';
 
 defineProps<{
@@ -18,32 +11,33 @@ defineProps<{
 
 <template>
     <div
-        class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10"
+        class="d-flex min-vh-100 flex-column align-items-center justify-content-center gap-4 bg-light p-4 p-md-5"
     >
-        <div class="flex w-full max-w-md flex-col gap-6">
+        <div class="d-flex w-100 flex-column gap-4" style="max-width: 28rem;">
             <Link
-                :href="home()"
-                class="flex items-center gap-2 self-center font-medium"
+                :href="index()"
+                class="d-flex align-items-center gap-2 align-self-center fw-medium text-decoration-none"
             >
-                <div class="flex h-9 w-9 items-center justify-center">
+                <div class="d-flex align-items-center justify-content-center" style="width: 2.25rem; height: 2.25rem;">
                     <AppLogoIcon
-                        class="size-9 fill-current text-black dark:text-white"
+                        style="width: 2.25rem; height: 2.25rem; fill: currentColor;"
+                        class="text-dark"
                     />
                 </div>
             </Link>
 
-            <div class="flex flex-col gap-6">
-                <Card class="rounded-xl">
-                    <CardHeader class="px-10 pt-8 pb-0 text-center">
-                        <CardTitle class="text-xl">{{ title }}</CardTitle>
-                        <CardDescription>
+            <div class="d-flex flex-column gap-4">
+                <div class="card rounded-3 shadow-sm">
+                    <div class="card-header bg-transparent border-0 px-5 pt-4 pb-0 text-center">
+                        <h5 class="card-title mb-2">{{ title }}</h5>
+                        <p class="card-text text-muted small mb-0">
                             {{ description }}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent class="px-10 py-8">
+                        </p>
+                    </div>
+                    <div class="card-body px-5 py-4">
                         <slot />
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,11 +1,5 @@
 <script setup lang="ts">
 import UserInfo from '@/components/UserInfo.vue';
-import {
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
@@ -24,31 +18,28 @@ defineProps<Props>();
 </script>
 
 <template>
-    <DropdownMenuLabel class="p-0 font-normal">
-        <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-            <UserInfo :user="user" :show-email="true" />
-        </div>
-    </DropdownMenuLabel>
-    <DropdownMenuSeparator />
-    <DropdownMenuGroup>
-        <DropdownMenuItem :as-child="true">
-            <Link class="block w-full" :href="edit()" prefetch as="button">
-                <Settings class="mr-2 h-4 w-4" />
+    <div class="dropdown-menu show" style="position: static; display: block;">
+        <h6 class="dropdown-header">
+            <div class="d-flex align-items-center gap-2 px-1 py-2 text-start small">
+                <UserInfo :user="user" :show-email="true" />
+            </div>
+        </h6>
+        <div class="dropdown-divider"></div>
+        <div>
+            <Link class="dropdown-item" :href="edit()" prefetch>
+                <Settings class="me-2" style="width: 1rem; height: 1rem;" />
                 Settings
             </Link>
-        </DropdownMenuItem>
-    </DropdownMenuGroup>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem :as-child="true">
+        </div>
+        <div class="dropdown-divider"></div>
         <Link
-            class="block w-full"
+            class="dropdown-item"
             :href="logout()"
             @click="handleLogout"
-            as="button"
             data-test="logout-button"
         >
-            <LogOut class="mr-2 h-4 w-4" />
+            <LogOut class="me-2" style="width: 1rem; height: 1rem;" />
             Log out
         </Link>
-    </DropdownMenuItem>
+    </div>
 </template>

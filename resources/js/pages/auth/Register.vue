@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
@@ -22,14 +18,15 @@ import { Form, Head } from '@inertiajs/vue3';
             v-bind="store.form()"
             :reset-on-success="['password', 'password_confirmation']"
             v-slot="{ errors, processing }"
-            class="flex flex-col gap-6"
+            class="d-flex flex-column gap-3"
         >
-            <div class="grid gap-6">
-                <div class="grid gap-2">
-                    <Label for="name">Name</Label>
-                    <Input
+            <div class="d-flex flex-column gap-3">
+                <div class="d-flex flex-column gap-2">
+                    <label for="name" class="form-label">Name</label>
+                    <input
                         id="name"
                         type="text"
+                        class="form-control"
                         required
                         autofocus
                         :tabindex="1"
@@ -40,11 +37,12 @@ import { Form, Head } from '@inertiajs/vue3';
                     <InputError :message="errors.name" />
                 </div>
 
-                <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
-                    <Input
+                <div class="d-flex flex-column gap-2">
+                    <label for="email" class="form-label">Email address</label>
+                    <input
                         id="email"
                         type="email"
+                        class="form-control"
                         required
                         :tabindex="2"
                         autocomplete="email"
@@ -54,11 +52,12 @@ import { Form, Head } from '@inertiajs/vue3';
                     <InputError :message="errors.email" />
                 </div>
 
-                <div class="grid gap-2">
-                    <Label for="password">Password</Label>
-                    <Input
+                <div class="d-flex flex-column gap-2">
+                    <label for="password" class="form-label">Password</label>
+                    <input
                         id="password"
                         type="password"
+                        class="form-control"
                         required
                         :tabindex="3"
                         autocomplete="new-password"
@@ -68,11 +67,12 @@ import { Form, Head } from '@inertiajs/vue3';
                     <InputError :message="errors.password" />
                 </div>
 
-                <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm password</Label>
-                    <Input
+                <div class="d-flex flex-column gap-2">
+                    <label for="password_confirmation" class="form-label">Confirm password</label>
+                    <input
                         id="password_confirmation"
                         type="password"
+                        class="form-control"
                         required
                         :tabindex="4"
                         autocomplete="new-password"
@@ -82,23 +82,28 @@ import { Form, Head } from '@inertiajs/vue3';
                     <InputError :message="errors.password_confirmation" />
                 </div>
 
-                <Button
+                <button
                     type="submit"
-                    class="mt-2 w-full"
+                    class="btn btn-primary mt-2 w-100"
                     tabindex="5"
                     :disabled="processing"
                     data-test="register-user-button"
                 >
-                    <Spinner v-if="processing" />
+                    <span
+                        v-if="processing"
+                        class="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                    ></span>
                     Create account
-                </Button>
+                </button>
             </div>
 
-            <div class="text-center text-sm text-muted-foreground">
+            <div class="text-center text-muted small">
                 Already have an account?
                 <TextLink
                     :href="login()"
-                    class="underline underline-offset-4"
+                    class="text-decoration-underline"
                     :tabindex="6"
                     >Log in</TextLink
                 >

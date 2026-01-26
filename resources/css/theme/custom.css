@@ -203,11 +203,27 @@ body {
     padding-left: 0px;
 }
 
+.btn-light {
+    white-space: nowrap;
+    background: #f1f5f9;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.1em;
+    text-transform: capitalize;
+    color: #000000;
+    border-radius: 12px;
+    padding: 8px 18px;
+    border: none;
+    transition: all 0.4s ease-in-out;
+    overflow: hidden;
+    z-index: 1;
+}
+
 .btn-default {
     position: relative;
     display: inline-block;
     font-family: var(--accent-font);
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     line-height: 1.1em;
     text-transform: capitalize;
@@ -286,8 +302,8 @@ body {
     position: relative;
     display: inline-block;
     font-family: var(--accent-font);
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     line-height: 1.1em;
     text-align: center;
     text-transform: capitalize;

@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
         "mll-lab/laravel-comment": "^1.5",
+        "spatie/laravel-medialibrary": "^11.17",
         "spatie/laravel-sluggable": "^3.7",
         "spatie/laravel-translatable": "^6.12"
     },

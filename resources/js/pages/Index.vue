@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 import ExchangeRateTable from '@/components/ExchangeRateTable.vue';
+import MarketMonitoring from '@/components/MarketMonitoring.vue';
 import { useTrans } from '@/composables/useTrans';
 
 const { __ } = useTrans();
@@ -126,6 +127,10 @@ const { __ } = useTrans();
             </div>
         </div>
         <!-- Hero Services Section End -->
+
+        <!-- Market Monitoring Section Start -->
+        <MarketMonitoring />
+         <!-- Market Monitoring Section End -->
     </GuestLayout>
 </template>
 

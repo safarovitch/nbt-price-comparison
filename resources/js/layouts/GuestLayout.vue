@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, nextTick, computed, watch } from 'vue';
 import { Link } from '@inertiajs/vue3';
-import { index, login, register } from '@/routes';
+import { index, login, register, insurance } from '@/routes';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import SecurityFooter from '@/components/SecurityFooter.vue';
 import { useTrans } from '@/composables/useTrans';
@@ -76,7 +76,7 @@ const menuItems = computed(() => [
         label: __('Insurance'),
         link: '#',
         items: [
-            { name: __('OSAGO'), icon: 'fa-solid fa-car-burst' },
+            { name: __('OSAGO'), icon: 'fa-solid fa-car-burst', link : insurance.url() },
             { name: __('Life Insurance'), icon: 'fa-solid fa-user-shield' },
             { name: __('Medical Insurance'), icon: 'fa-solid fa-heart-pulse' },
             { name: __('Car Insurance'), icon: 'fa-solid fa-car-side' },
@@ -250,7 +250,7 @@ onMounted(async () => {
                          @mouseleave="handleMouseLeave">
                         <div class="container" v-if="displayIndex !== null">
                              <div class="mega-menu-grid">
-                                <a href="#" v-for="subItem in menuItems[displayIndex].items" 
+                                <a :href="subItem.link" v-for="subItem in menuItems[displayIndex].items" 
                                    :key="subItem.name" 
                                    class="mega-menu-card">
                                     <div class="icon-box">

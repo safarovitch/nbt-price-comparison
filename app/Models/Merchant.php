@@ -16,6 +16,10 @@ class Merchant extends Model implements HasMedia
     /** @use HasFactory<\Database\Factories\MerchantFactory> */
     use HasFactory, HasComments, InteractsWithMedia;
 
+    protected $primaryKey = 'uuid';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     public function canBeRated(): bool
     {
         return true;

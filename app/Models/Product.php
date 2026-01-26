@@ -27,7 +27,7 @@ class Product extends Model
         'merchant_id',
         'name',
         'type',
-        'currency',
+        'currency_code',
         'interest_rate',
         'fees',
         'term_months',
@@ -56,6 +56,6 @@ class Product extends Model
 
     public function merchant(): BelongsTo
     {
-        return $this->belongsTo(Merchant::class);
+        return $this->belongsTo(Merchant::class, 'merchant_id', 'uuid');
     }
 }

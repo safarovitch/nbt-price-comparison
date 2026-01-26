@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
-            $table->foreignId('merchant_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('merchant_id')->constrained('merchants', 'uuid')->cascadeOnDelete();
             $table->string('name');
             $table->string('type');
             $table->integer('currency_code');
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->timestamp('remote_updated_at')->nullable();
             $table->timestamps();
 
-            $table->index(['merchant_id', 'type', 'currency', 'name']);
+            $table->index(['merchant_id', 'type', 'currency_code', 'name']);
         });
     }
 

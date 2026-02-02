@@ -33,6 +33,7 @@ class SetLocale
         if ($locale && in_array($locale, $supportedLocales)) {
             App::setLocale($locale);
             Session::put('locale', $locale);
+            \Illuminate\Support\Facades\URL::defaults(['locale' => $locale]);
 
             // If default locale is in URL and should be hidden, redirect to remove it
             if ($hideDefaultLocale && $locale === $defaultLocale && $request->route('locale')) {
@@ -62,6 +63,12 @@ class SetLocale
                     return redirect("/{$currentLocale}" . ($path ? "/{$path}" : ''));
                 }
             }
+        }
+
+
+        // Forget the locale parameter so it's not passed to controller methods
+        if ($request->route()) {
+            $request->route()->forgetParameter('locale');
         }
 
         return $next($request);

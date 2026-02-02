@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SyncMerchantProductsJob;
-use App\Models\Merchant;
+use App\Jobs\SyncOrganizationProductsJob;
+use App\Models\Organization;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class WebhookMerchantSyncController extends Controller
+class WebhookOrganizationSyncController extends Controller
 {
     /**
-     * Handle inbound webhook: queue sync for the given merchant.
+     * Handle inbound webhook: queue sync for the given Organization.
      */
-    public function store(Request $request, Merchant $merchant): JsonResponse
+    public function store(Request $request, Organization $organization): JsonResponse
     {
-        if (! $merchant->is_active) {
+        if (! $organization->is_active) {
             abort(404);
         }
 
-        $secret = $merchant->webhook_secret;
+        $secret = $organization->webhook_secret;
         if ($secret !== null && $secret !== '') {
             $signature = $request->header('X-Webhook-Signature');
             $payload = $request->getContent();
@@ -30,7 +30,7 @@ class WebhookMerchantSyncController extends Controller
             }
         }
 
-        SyncMerchantProductsJob::dispatch($merchant);
+        SyncOrganizationProductsJob::dispatch($organization);
 
         return response()->json(['message' => 'Sync queued'], 202);
     }

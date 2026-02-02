@@ -50,5 +50,5 @@ return [
     |
     */
 
-    'hide_default_locale_in_url' => env('APP_HIDE_DEFAULT_LOCALE', true),
+    'hide_default_locale_in_url' => env('APP_HIDE_DEFAULT_LOCALE', false),
 ];

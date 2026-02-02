@@ -11,16 +11,16 @@ class LocaleController extends Controller
     /**
      * Switch locale and redirect to same page
      */
-    public function switch(Request $request, string $locale): RedirectResponse
+    public function switch(Request $request, string $new_locale): RedirectResponse
     {
         $supportedLocales = LocaleHelper::getSupportedLocales();
 
-        if (!in_array($locale, $supportedLocales)) {
+        if (!in_array($new_locale, $supportedLocales)) {
             abort(404);
         }
 
-        session(['locale' => $locale]);
-        app()->setLocale($locale);
+        session(['locale' => $new_locale]);
+        app()->setLocale($new_locale);
 
         // Get referrer or current path
         $referer = $request->header('referer');
@@ -50,20 +50,20 @@ class LocaleController extends Controller
             }
 
             // Build new path with new locale
-            if ($hideDefault && $locale === $defaultLocale) {
+            if ($hideDefault && $new_locale === $defaultLocale) {
                 $newPath = $pathWithoutLocale === '/' || empty($pathWithoutLocale) ? '/' : "/{$pathWithoutLocale}";
             } else {
-                $newPath = $pathWithoutLocale === '/' || empty($pathWithoutLocale) ? "/{$locale}" : "/{$locale}/{$pathWithoutLocale}";
+                $newPath = $pathWithoutLocale === '/' || empty($pathWithoutLocale) ? "/{$new_locale}" : "/{$new_locale}/{$pathWithoutLocale}";
             }
 
             return redirect($newPath);
         }
 
         // Fallback: if no referer, redirect to locale root
-        if ($hideDefault && $locale === $defaultLocale) {
+        if ($hideDefault && $new_locale === $defaultLocale) {
             return redirect('/');
         }
 
-        return redirect("/{$locale}");
+        return redirect("/{$new_locale}");
     }
 }

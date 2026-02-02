@@ -6,15 +6,15 @@ const { __ } = useTrans();
 const faqs = [
     {
         q: __('Is the electronic policy valid?'),
-        a: __('Yes, the electronic OSAGO policy has the same legal force as the paper one. You can show it on your smartphone or print it.')
+        a: __('Yes, electronic policies have the same legal force as paper ones. You can show them on your smartphone or print them out.')
     },
     {
         q: __('How is the price calculated?'),
-        a: __('The cost depends on the base rate of the insurance company and coefficients: region, driver age/experience, power of the car, and no-claim discount (KBM).')
+        a: __('The cost depends on the type of insurance and individual factors (e.g., car power for auto, destination for travel, property value for home).')
     },
     {
         q: __('What if I make a mistake in the data?'),
-        a: __('You should contact the insurance company to make changes. Most changes can be made online through the personal cabinet on the insurer website.')
+        a: __('You should contact the insurance company or our support to make changes. Most corrections can be handled online quickly.')
     }
 ];
 </script>
@@ -25,7 +25,7 @@ const faqs = [
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <h2 class="fw-bold fs-1 text-center mb-5">{{ __('Frequently Asked Questions') }}</h2>
-                    
+
                     <div class="accordion accordion-custom" id="insuranceFaq">
                         <div v-for="(faq, index) in faqs" :key="index" class="accordion-item border border-light rounded-4 mb-3 overflow-hidden shadow-sm transition-all hover-shadow">
                             <h2 class="accordion-header" :id="'heading' + index">
@@ -57,7 +57,7 @@ const faqs = [
 }
 
 .hover-shadow:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05) !important;
     border-color: rgba(var(--bs-primary-rgb), 0.1) !important;
 }
 

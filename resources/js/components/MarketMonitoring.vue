@@ -1,11 +1,31 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, nextTick, computed } from 'vue';
+import { onMounted, onUnmounted, ref, nextTick, computed, watch } from 'vue';
 import { useTrans } from '@/composables/useTrans';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 
 const { __ } = useTrans();
+
+interface ProductData {
+    uuid: string;
+    name: string;
+    rate: number;
+    rateMax?: number;
+    rateMin?: number;
+    termMin: number;
+    termMax: number;
+    organization: {
+        uuid: string;
+        name: string;
+        logo: string | null;
+    } | null;
+}
+
+const props = defineProps<{
+    credits: ProductData[];
+    deposits: ProductData[];
+}>();
 
 const currentMonth = computed(() => {
     return new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' }).format(new Date()).toUpperCase();
@@ -20,8 +40,48 @@ const activeDepositPeriod = ref('1 year');
 const loanPeriods = ['6 months', '1 year', '3 years', '5 years'];
 const depositPeriods = ['1 month', '3 months', '6 months', '1 year'];
 
+// Helper to convert period string to months
+const periodToMonths = (period: string): number => {
+    const match = period.match(/(\d+)\s*(month|year)/);
+    if (!match) return 12;
+    const value = parseInt(match[1]);
+    const unit = match[2];
+    return unit === 'year' ? value * 12 : value;
+};
+
+// Filter credits by selected period
+const filteredCredits = computed(() => {
+    const targetMonths = periodToMonths(activeLoanPeriod.value);
+    return props.credits
+        .filter(p => {
+            // Match if term range includes the target period
+            const min = p.termMin ?? 0;
+            const max = p.termMax ?? 999;
+            return min <= targetMonths && max >= targetMonths;
+        })
+        .slice(0, 6);
+});
+
+// Filter deposits by selected period
+const filteredDeposits = computed(() => {
+    const targetMonths = periodToMonths(activeDepositPeriod.value);
+    return props.deposits
+        .filter(p => {
+            const min = p.termMin ?? 0;
+            const max = p.termMax ?? 999;
+            return min <= targetMonths && max >= targetMonths;
+        })
+        .slice(0, 5);
+});
+
+// Chart colors array
+const chartColors = ['#e31e24', '#00a651', '#00aed9', '#006838', '#303e9f', '#ff6b35'];
+
 const initLoanChart = () => {
     if (loanChartRoot.value) loanChartRoot.value.dispose();
+    
+    const chartDiv = document.getElementById("loan-chart-div");
+    if (!chartDiv) return;
     
     const root = am5.Root.new("loan-chart-div");
     root.setThemes([am5themes_Animated.new(root)]);
@@ -36,14 +96,17 @@ const initLoanChart = () => {
         })
     );
 
-    const data = [
-        { bank: "Eskhata", rate: 26.8, logo: "/storage/images/banks/eskhata.png", color: "#e31e24" },
-        { bank: "NBT", rate: 28.4, logo: "/storage/images/banks/nbt-min.png", color: "#00a651" },
-        { bank: "Spitamen", rate: 32.8, logo: "/storage/images/banks/spitamen.png", color: "#00aed9" },
-        { bank: "Amonat", rate: 33.5, logo: "/storage/images/banks/amonat.png", color: "#e31e24" },
-        { bank: "Halyk", rate: 33.8, logo: "/storage/images/banks/halyk.png", color: "#006838" },
-        { bank: "International", rate: 34.5, logo: "/storage/images/banks/international.png", color: "#303e9f" }
-    ];
+    const data = filteredCredits.value.map((p, index) => ({
+        bank: p.organization?.name || p.name,
+        rate: p.rate,
+        logo: p.organization?.logo || "/storage/images/icons/bank-placeholder.png",
+        color: chartColors[index % chartColors.length]
+    }));
+
+    if (data.length === 0) {
+        loanChartRoot.value = root;
+        return;
+    }
 
     const xAxis = chart.xAxes.push(
         am5xy.CategoryAxis.new(root, {
@@ -89,12 +152,6 @@ const initLoanChart = () => {
         fillOpacity: 0.1,
     });
 
-    // Custom background columns like in the design
-    series.mainContainer.children.push(am5.Graphics.new(root, {
-        fill: am5.color(0x000000),
-        fillOpacity: 0.05
-    }));
-
     series.columns.template.adapters.add("fill", (fill, target) => {
         return am5.color((target.dataItem?.dataContext as any).color);
     });
@@ -115,7 +172,6 @@ const initLoanChart = () => {
         });
     });
 
-    // Add logos as bullets at the bottom
     series.bullets.push(() => {
         const container = am5.Container.new(root, {
             centerX: am5.p50,
@@ -124,7 +180,7 @@ const initLoanChart = () => {
             dy: 25
         });
 
-        const circle = container.children.push(am5.Circle.new(root, {
+        container.children.push(am5.Circle.new(root, {
             radius: 15,
             fill: am5.color(0xffffff),
             stroke: am5.color(0xeeeeee),
@@ -155,6 +211,9 @@ const initLoanChart = () => {
 const initDepositChart = () => {
     if (depositChartRoot.value) depositChartRoot.value.dispose();
 
+    const chartDiv = document.getElementById("deposit-chart-div");
+    if (!chartDiv) return;
+
     const root = am5.Root.new("deposit-chart-div");
     root.setThemes([am5themes_Animated.new(root)]);
 
@@ -168,13 +227,16 @@ const initDepositChart = () => {
         })
     );
 
-    const data = [
-        { bank: "Eskhata", rate: 14.2, color: "#e31e24" },
-        { bank: "Spitamen", rate: 14.1, color: "#00aed9" },
-        { bank: "Halyk", rate: 13.8, color: "#006838" },
-        { bank: "Amonat", rate: 13.5, color: "#e31e24" },
-        { bank: "International", rate: 13.0, color: "#303e9f" }
-    ];
+    const data = filteredDeposits.value.map((p, index) => ({
+        bank: p.organization?.name || p.name,
+        rate: p.rate,
+        color: chartColors[index % chartColors.length]
+    }));
+
+    if (data.length === 0) {
+        depositChartRoot.value = root;
+        return;
+    }
 
     const yAxis = chart.yAxes.push(
         am5xy.CategoryAxis.new(root, {
@@ -224,8 +286,8 @@ const initDepositChart = () => {
         fillOpacity: 0.1
     });
 
-    series.columns.template.adapters.add("fill", (fill, target) => {
-        return am5.color(0x00a651); // Single color for bars like design or multi-color
+    series.columns.template.adapters.add("fill", () => {
+        return am5.color(0x00a651);
     });
 
     series.bullets.push(() => {
@@ -250,6 +312,15 @@ const initDepositChart = () => {
 
     depositChartRoot.value = root;
 };
+
+// Watch for period changes to update charts
+watch(activeLoanPeriod, () => {
+    nextTick(() => initLoanChart());
+});
+
+watch(activeDepositPeriod, () => {
+    nextTick(() => initDepositChart());
+});
 
 onMounted(() => {
     nextTick(() => {
@@ -331,21 +402,27 @@ onUnmounted(() => {
                         </div>
 
                         <div class="deposit-list">
-                            <div v-for="(bank, index) in ['Eskhata', 'Spitamen', 'Halyk', 'Amonat', 'International']" :key="bank" 
+                            <div v-if="filteredDeposits.length === 0" class="text-muted text-center py-4">
+                                {{ __('No deposits available for this period') }}
+                            </div>
+                            <div v-for="(deposit, index) in filteredDeposits" :key="deposit.uuid" 
                                  class="d-flex align-items-center gap-3 mb-4">
                                 <div class="bank-mini-logo">
-                                    <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                    <div v-if="deposit.organization?.logo" class="rounded-circle bg-light border d-flex align-items-center justify-content-center overflow-hidden" style="width: 32px; height: 32px;">
+                                        <img :src="deposit.organization.logo" :alt="deposit.organization.name" class="w-100 h-100 object-fit-contain">
+                                    </div>
+                                    <div v-else class="rounded-circle bg-light border d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
                                         <i class="fa-solid fa-building-columns text-muted fs-6"></i>
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
                                     <div class="d-flex justify-content-between mb-1">
-                                        <span class="small fw-bold text-dark">{{ bank }}</span>
-                                        <span class="small fw-bold text-primary">{{ [14.2, 14.1, 13.8, 13.5, 13.0][index] }}%</span>
+                                        <span class="small fw-bold text-dark">{{ deposit.organization?.name || deposit.name }}</span>
+                                        <span class="small fw-bold text-primary">{{ deposit.rate }}%</span>
                                     </div>
                                     <div class="progress" style="height: 6px; background: rgba(var(--bs-primary-rgb), 0.05);">
                                         <div class="progress-bar rounded-pill" 
-                                             :style="`width: ${[95, 92, 88, 85, 80][index]}%; background: var(--bs-primary);`" 
+                                             :style="`width: ${Math.min(deposit.rate * 5, 100)}%; background: var(--bs-primary);`" 
                                              role="progressbar"></div>
                                     </div>
                                 </div>
@@ -411,50 +488,3 @@ onUnmounted(() => {
         </div>
     </section>
 </template>
-
-<style scoped>
-.bg-light-gray {
-    background-color: #f8fbff;
-}
-
-.rounded-5 {
-    border-radius: 2rem !important;
-}
-
-.monitoring-card {
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-.monitoring-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05) !important;
-}
-
-.icon-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.letter-spacing-1 {
-    letter-spacing: 1px;
-}
-
-.mortgage-insurance-promo {
-    background: #f0fdf4;
-    border: 1px solid #dcfce7;
-}
-
-.bank-mini-logo img {
-    object-fit: contain;
-}
-
-.transition-all {
-    transition: all 0.2s ease-in-out;
-}
-</style>

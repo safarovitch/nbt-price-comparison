@@ -1,6 +1,7 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
+import { setUrlDefaults } from '@/wayfinder';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
@@ -34,6 +35,9 @@ createInertiaApp({
             import.meta.glob<DefineComponent>('./pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
+        const locale = props.initialPage.props.locale as string;
+        setUrlDefaults({ locale });
+
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .mount(el);

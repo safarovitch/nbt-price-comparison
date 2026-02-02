@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Merchant>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Organization>
  */
-class MerchantFactory extends Factory
+class OrganizationFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -23,7 +23,7 @@ class MerchantFactory extends Factory
             'auth_type' => 'api_key',
             'auth_value' => fake()->uuid(),
             'webhook_secret' => null,
-            'is_active' => true,
+            'status' => 'active',
         ];
     }
 }

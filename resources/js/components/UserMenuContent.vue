@@ -3,7 +3,7 @@ import UserInfo from '@/components/UserInfo.vue';
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { LogOut, Settings } from 'lucide-vue-next';
 
 interface Props {
@@ -15,6 +15,9 @@ const handleLogout = () => {
 };
 
 defineProps<Props>();
+
+const page = usePage();
+const locale = page.props.locale as string || 'en';
 </script>
 
 <template>
@@ -26,18 +29,13 @@ defineProps<Props>();
         </h6>
         <div class="dropdown-divider"></div>
         <div>
-            <Link class="dropdown-item" :href="edit()" prefetch>
+            <Link class="dropdown-item" :href="edit(locale)" prefetch>
                 <Settings class="me-2" style="width: 1rem; height: 1rem;" />
                 Settings
             </Link>
         </div>
         <div class="dropdown-divider"></div>
-        <Link
-            class="dropdown-item"
-            :href="logout()"
-            @click="handleLogout"
-            data-test="logout-button"
-        >
+        <Link class="dropdown-item" :href="logout()" @click="handleLogout" data-test="logout-button">
             <LogOut class="me-2" style="width: 1rem; height: 1rem;" />
             Log out
         </Link>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import GuestLayout from '@/layouts/GuestLayout.vue';
 import InsuranceHero from '@/components/Insurance/InsuranceHero.vue';
+import InsuranceCategories from '@/components/Insurance/InsuranceCategories.vue';
 import InsuranceBenefits from '@/components/Insurance/InsuranceBenefits.vue';
 import InsurancePartners from '@/components/Insurance/InsurancePartners.vue';
 import InsuranceReviews from '@/components/Insurance/InsuranceReviews.vue';
@@ -17,11 +18,15 @@ defineProps<{
 </script>
 
 <template>
-    <Head :title="__('OSAGO Online')" />
-    
+
+    <Head :title="__('Insurance Comparison')" />
+
     <GuestLayout>
-        <!-- Hero Section with Calculation Form -->
+        <!-- Hero Search / Title -->
         <InsuranceHero />
+
+        <!-- Main Category Grid -->
+        <InsuranceCategories />
 
         <!-- Benefits Summary -->
         <InsuranceBenefits />

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Actuallymab\LaravelComment\HasComments;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,11 +11,18 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Translatable\HasTranslations;
 
-class Merchant extends Model implements HasMedia
+class Organization extends Model implements HasMedia
 {
-    /** @use HasFactory<\Database\Factories\MerchantFactory> */
-    use HasFactory, HasComments, InteractsWithMedia;
+    /** @use HasFactory<\Database\Factories\OrganizationFactory> */
+    use HasFactory, HasComments, InteractsWithMedia, HasUuids, HasTranslations;
+
+    /**
+     * Translatable fields for spatie/laravel-translatable
+     * @var array<int, string>
+     */
+    public array $translatable = ['name', 'description', 'legal_address'];
 
     protected $primaryKey = 'uuid';
     protected $keyType = 'string';
@@ -50,9 +58,14 @@ class Merchant extends Model implements HasMedia
         'auth_value',
         'base_url',
         'api_key',
+        'webhook_secret',
+        'endpoints',
         'sync_type',
         'status',
         'last_synced_at',
+        'last_sync_status',
+        'last_sync_error',
+        'sync_started_at',
     ];
 
     /**
@@ -63,7 +76,14 @@ class Merchant extends Model implements HasMedia
         return [
             'auth_value' => 'encrypted',
             'last_synced_at' => 'datetime',
+            'endpoints' => 'array',
+            'sync_started_at' => 'datetime',
         ];
+    }
+
+    public function getIsActiveAttribute(): bool
+    {
+        return $this->status === 'active';
     }
 
     public function registerMediaConversions(?Media $media = null): void

@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('merchants', function (Blueprint $table) {
+        Schema::create('organizations', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
             $table->string('type')->nullable();
             $table->string('category')->nullable();
-            $table->string('name');
-            $table->text('description', 5000)->nullable();
-            $table->text('legal_address', 500)->nullable();
+            $table->json('name'); // Translatable: {"ru": "...", "en": "...", "tj": "..."}
+            $table->json('description')->nullable(); // Translatable
+            $table->json('legal_address')->nullable(); // Translatable
             $table->string('registration_number')->nullable();
             $table->string('website')->nullable();
             $table->string('tin')->nullable();
@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('api_key')->nullable();
             $table->string('sync_type')->nullable();
             $table->string('status')->default('active');
+            $table->json('endpoints')->nullable();
             $table->timestamp('last_synced_at')->nullable();
             $table->timestamps();
         });
@@ -43,6 +44,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('merchants');
+        Schema::dropIfExists('organizations');
     }
 };

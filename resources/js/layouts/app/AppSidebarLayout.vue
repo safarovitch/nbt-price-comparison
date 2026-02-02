@@ -17,9 +17,21 @@ withDefaults(defineProps<Props>(), {
 <template>
     <AppShell variant="sidebar">
         <AppSidebar />
-        <AppContent variant="sidebar" class="overflow-x-hidden">
-            <AppSidebarHeader :breadcrumbs="breadcrumbs" />
-            <slot />
-        </AppContent>
+        <!-- Add margin-left on desktop to offset fixed sidebar (16rem width) -->
+        <div class="d-flex flex-column flex-fill" style="margin-left: 0;">
+            <div class="d-none d-md-block" style="margin-left: 16rem;">
+                <AppContent variant="sidebar" class="overflow-x-hidden">
+                    <AppSidebarHeader :breadcrumbs="breadcrumbs" />
+                    <slot />
+                </AppContent>
+            </div>
+            <!-- Mobile: no margin -->
+            <div class="d-md-none">
+                <AppContent variant="sidebar" class="overflow-x-hidden">
+                    <AppSidebarHeader :breadcrumbs="breadcrumbs" />
+                    <slot />
+                </AppContent>
+            </div>
+        </div>
     </AppShell>
 </template>

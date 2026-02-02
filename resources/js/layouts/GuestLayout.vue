@@ -27,14 +27,14 @@ watch(activeMenuIndex, (newVal) => {
 const menuItems = computed(() => [
     {
         label: __('Credits'),
-        link: '#',
+        link: '/credits',
         items: [
-            { name: __('Consumer Loans'), icon: 'fa-solid fa-hand-holding-dollar' },
-            { name: __('Car Loans'), icon: 'fa-solid fa-car' },
-            { name: __('Microloans'), icon: 'fa-solid fa-coins' },
-            { name: __('Murabaha'), icon: 'fa-regular fa-handshake' },
-            { name: __('Mudaraba'), icon: 'fa-solid fa-users-viewfinder' },
-            { name: __('Musharaka'), icon: 'fa-solid fa-briefcase' },
+            { name: __('Consumer Loans'), icon: 'fa-solid fa-hand-holding-dollar', link: '/credits' },
+            { name: __('Car Loans'), icon: 'fa-solid fa-car', link: '/credits?purpose=auto' },
+            { name: __('Microloans'), icon: 'fa-solid fa-coins', link: '/credits' },
+            { name: __('Murabaha'), icon: 'fa-regular fa-handshake', link: '/credits' },
+            { name: __('Mudaraba'), icon: 'fa-solid fa-users-viewfinder', link: '/credits' },
+            { name: __('Musharaka'), icon: 'fa-solid fa-briefcase', link: '/credits' },
         ]
     },
     {
@@ -74,9 +74,9 @@ const menuItems = computed(() => [
     },
     {
         label: __('Insurance'),
-        link: '#',
+        link: insurance.url(),
         items: [
-            { name: __('OSAGO'), icon: 'fa-solid fa-car-burst', link : insurance.url() },
+            { name: __('OSAGO'), icon: 'fa-solid fa-car-burst', link: insurance.url() },
             { name: __('Life Insurance'), icon: 'fa-solid fa-user-shield' },
             { name: __('Medical Insurance'), icon: 'fa-solid fa-heart-pulse' },
             { name: __('Car Insurance'), icon: 'fa-solid fa-car-side' },
@@ -195,7 +195,7 @@ onMounted(async () => {
 
         <!-- Main Content -->
         <div :style="{ visibility: preloaderVisible ? 'hidden' : 'visible' }">
-            
+
             <!-- Header Start -->
             <header class="main-header py-2">
                 <div class="header-sticky">
@@ -211,12 +211,10 @@ onMounted(async () => {
                             <div class="collapse navbar-collapse main-menu">
                                 <div class="nav-menu-wrapper" @mouseleave="handleMouseLeave">
                                     <ul class="navbar-nav mr-auto" id="menu">
-                                        <li v-for="(item, index) in menuItems" :key="index"
-                                            class="nav-item submenu mega-menu"
-                                            @mouseenter="handleMouseEnter(index)">
-                                            
+                                        <li v-for="(item, index) in menuItems" :key="index" class="nav-item submenu mega-menu" @mouseenter="handleMouseEnter(index)">
+
                                             <a class="nav-link" :href="item.link">{{ item.label }}</a>
-                                            
+
                                             <!-- Hidden nested structure for SlickNav/SEO -->
                                             <div class="d-none">
                                                 <ul>
@@ -228,12 +226,12 @@ onMounted(async () => {
                                         </li>
                                     </ul>
                                 </div>
-                                
+
                                 <!-- Header Btn Start -->
                                 <div class="header-btn d-inline-flex align-items-center">
                                     <LanguageSwitcher />
-                                    <Link :href="login()" class="btn-login">login</Link>
-                                    <Link :href="register()" class="btn-default btn-signup">sign up</Link>
+                                    <Link :href="login()" class="btn-login mx-3">Login</Link>
+                                    <Link :href="register()" class="btn-default btn-signup">Sign Up</Link>
                                 </div>
                                 <!-- Header Btn End -->
                             </div>
@@ -242,23 +240,18 @@ onMounted(async () => {
                         </div>
                     </nav>
                     <div class="responsive-menu"></div>
-                    
+
                     <!-- Shared Desktop Mega Menu Content -->
-                    <div class="mega-menu-shared-container mt-2" 
-                         :class="{ 'active': isMenuOpen }"
-                         @mouseenter="handleContentMouseEnter"
-                         @mouseleave="handleMouseLeave">
+                    <div class="mega-menu-shared-container mt-2" :class="{ 'active': isMenuOpen }" @mouseenter="handleContentMouseEnter" @mouseleave="handleMouseLeave">
                         <div class="container" v-if="displayIndex !== null">
-                             <div class="mega-menu-grid">
-                                <a :href="subItem.link" v-for="subItem in menuItems[displayIndex].items" 
-                                   :key="subItem.name" 
-                                   class="mega-menu-card">
+                            <div class="mega-menu-grid">
+                                <a :href="subItem.link" v-for="subItem in menuItems[displayIndex].items" :key="subItem.name" class="mega-menu-card">
                                     <div class="icon-box">
                                         <i :class="subItem.icon"></i>
                                     </div>
                                     <span class="item-name">{{ subItem.name }}</span>
                                 </a>
-                             </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -271,10 +264,8 @@ onMounted(async () => {
             <!-- Security Footer -->
             <SecurityFooter />
 
-             
+
         </div>
         <!-- Main Content End -->
     </div>
 </template>
-
-

@@ -12,13 +12,7 @@ const showDropdown = ref(false);
 
 <template>
     <div class="dropdown">
-        <button
-            type="button"
-            class="btn btn-link w-100 text-start text-decoration-none d-flex align-items-center justify-content-between p-2"
-            data-bs-toggle="dropdown"
-            data-test="sidebar-menu-button"
-            @click="showDropdown = !showDropdown"
-        >
+        <button type="button" class="btn btn-link w-100 text-start text-decoration-none text-white d-flex align-items-center justify-content-between p-2" data-bs-toggle="dropdown" data-test="sidebar-menu-button" @click="showDropdown = !showDropdown">
             <UserInfo :user="user" />
             <ChevronsUpDown style="width: 1rem; height: 1rem;" />
         </button>

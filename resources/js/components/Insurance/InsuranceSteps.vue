@@ -7,7 +7,7 @@ const steps = [
     {
         num: '01',
         title: __('Compare'),
-        desc: __('Enter car details and get offers from multiple companies.')
+        desc: __('Enter your details and get offers from multiple companies.')
     },
     {
         num: '02',
@@ -25,12 +25,12 @@ const steps = [
 <template>
     <div class="py-5 bg-white">
         <div class="container py-lg-5">
-            <h2 class="fw-bold fs-1 text-center mb-5">{{ __('How to buy OSAGO online') }}</h2>
-            
+            <h2 class="fw-bold fs-1 text-center mb-5">{{ __('How to buy insurance online') }}</h2>
+
             <div class="row g-0 justify-content-center position-relative">
                 <!-- Step Connector Line (Desktop) -->
                 <div class="d-none d-md-block position-absolute top-50 start-50 translate-middle w-75 h-px bg-light z-0 mt-n5"></div>
-                
+
                 <div v-for="(step, index) in steps" :key="step.num" class="col-md-4 mb-5 mb-md-0 position-relative z-1 animate__animated animate__fadeInUp" :style="`animation-delay: ${index * 0.2}s`">
                     <div class="step-card px-4 text-center">
                         <div class="step-number-container mb-4 mx-auto">
@@ -48,8 +48,13 @@ const steps = [
 </template>
 
 <style scoped>
-.h-px { height: 2px; }
-.mt-n5 { margin-top: -3rem; }
+.h-px {
+    height: 2px;
+}
+
+.mt-n5 {
+    margin-top: -3rem;
+}
 
 .step-number {
     width: 64px;

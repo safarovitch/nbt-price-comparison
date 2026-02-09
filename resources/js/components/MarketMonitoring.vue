@@ -79,10 +79,10 @@ const chartColors = ['#e31e24', '#00a651', '#00aed9', '#006838', '#303e9f', '#ff
 
 const initLoanChart = () => {
     if (loanChartRoot.value) loanChartRoot.value.dispose();
-    
+
     const chartDiv = document.getElementById("loan-chart-div");
     if (!chartDiv) return;
-    
+
     const root = am5.Root.new("loan-chart-div");
     root.setThemes([am5themes_Animated.new(root)]);
 
@@ -204,7 +204,7 @@ const initLoanChart = () => {
     series.data.setAll(data);
     series.appear(1000);
     chart.appear(1000, 100);
-    
+
     loanChartRoot.value = root;
 };
 
@@ -336,7 +336,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <section class="market-monitoring py-5 bg-light-gray">
+    <section class="market-monitoring py-5 bg-white">
         <div class="container py-lg-4">
             <div class="d-flex align-items-center mb-5 gap-3">
                 <h2 class="fw-bold fs-2 mb-0">{{ __('Market Monitoring') }}</h2>
@@ -348,7 +348,7 @@ onUnmounted(() => {
             <div class="row g-4">
                 <!-- 1. Loan Rates -->
                 <div class="col-lg-4">
-                    <div class="monitoring-card h-100 bg-white p-3 p-xl-4 rounded-4 border-0 shadow-sm">
+                    <div class="monitoring-card h-100 bg-white p-3 p-xl-4 rounded-4 shadow-sm">
                         <div class="d-flex justify-content-between align-items-start mb-4">
                             <div>
                                 <h3 class="fs-4 fw-bold mb-1">{{ __('Loan Rates') }}</h3>
@@ -360,10 +360,7 @@ onUnmounted(() => {
                         </div>
 
                         <div class="period-selector d-flex gap-2 mb-5">
-                            <button v-for="period in loanPeriods" :key="period" 
-                                    @click="activeLoanPeriod = period"
-                                    class="btn btn-sm rounded-pill px-3 py-2 fw-bold transition-all"
-                                    :class="activeLoanPeriod === period ? 'btn-primary' : 'btn-light text-muted'">
+                            <button v-for="period in loanPeriods" :key="period" @click="activeLoanPeriod = period" class="btn btn-sm rounded-pill px-3 py-2 fw-bold transition-all" :class="activeLoanPeriod === period ? 'btn-primary' : 'btn-light text-muted'">
                                 {{ __(period) }}
                             </button>
                         </div>
@@ -381,7 +378,7 @@ onUnmounted(() => {
 
                 <!-- 2. Profitable Deposits -->
                 <div class="col-lg-4">
-                    <div class="monitoring-card h-100 bg-white p-3 p-xl-4 rounded-4 border-0 shadow-sm">
+                    <div class="monitoring-card h-100 bg-white p-3 p-xl-4 rounded-4 shadow-sm">
                         <div class="d-flex justify-content-between align-items-start mb-4">
                             <div>
                                 <h3 class="fs-4 fw-bold mb-1">{{ __('Profitable Deposits') }}</h3>
@@ -393,10 +390,7 @@ onUnmounted(() => {
                         </div>
 
                         <div class="period-selector d-flex gap-2 mb-5">
-                            <button v-for="period in depositPeriods" :key="period" 
-                                    @click="activeDepositPeriod = period"
-                                    class="btn btn-sm rounded-pill px-3 py-2 fw-bold transition-all"
-                                    :class="activeDepositPeriod === period ? 'btn-primary' : 'btn-light text-muted'">
+                            <button v-for="period in depositPeriods" :key="period" @click="activeDepositPeriod = period" class="btn btn-sm rounded-pill px-3 py-2 fw-bold transition-all" :class="activeDepositPeriod === period ? 'btn-primary' : 'btn-light text-muted'">
                                 {{ __(period) }}
                             </button>
                         </div>
@@ -405,8 +399,7 @@ onUnmounted(() => {
                             <div v-if="filteredDeposits.length === 0" class="text-muted text-center py-4">
                                 {{ __('No deposits available for this period') }}
                             </div>
-                            <div v-for="(deposit, index) in filteredDeposits" :key="deposit.uuid" 
-                                 class="d-flex align-items-center gap-3 mb-4">
+                            <div v-for="(deposit, index) in filteredDeposits" :key="deposit.uuid" class="d-flex align-items-center gap-3 mb-4">
                                 <div class="bank-mini-logo">
                                     <div v-if="deposit.organization?.logo" class="rounded-circle bg-light border d-flex align-items-center justify-content-center overflow-hidden" style="width: 32px; height: 32px;">
                                         <img :src="deposit.organization.logo" :alt="deposit.organization.name" class="w-100 h-100 object-fit-contain">
@@ -421,9 +414,7 @@ onUnmounted(() => {
                                         <span class="small fw-bold text-primary">{{ deposit.rate }}%</span>
                                     </div>
                                     <div class="progress" style="height: 6px; background: rgba(var(--bs-primary-rgb), 0.05);">
-                                        <div class="progress-bar rounded-pill" 
-                                             :style="`width: ${Math.min(deposit.rate * 5, 100)}%; background: var(--bs-primary);`" 
-                                             role="progressbar"></div>
+                                        <div class="progress-bar rounded-pill" :style="`width: ${Math.min(deposit.rate * 5, 100)}%; background: var(--bs-primary);`" role="progressbar"></div>
                                     </div>
                                 </div>
                             </div>
@@ -440,7 +431,7 @@ onUnmounted(() => {
 
                 <!-- 3. Mortgage Rates -->
                 <div class="col-lg-4">
-                    <div class="monitoring-card h-100 bg-white p-3 p-xl-4 rounded-4 border-0 shadow-sm">
+                    <div class="monitoring-card h-100 bg-white p-3 p-xl-4 rounded-4 shadow-sm">
                         <div class="d-flex justify-content-between align-items-start mb-4">
                             <div>
                                 <h3 class="fs-4 fw-bold mb-1">{{ __('Mortgage Rates') }}</h3>
@@ -452,24 +443,21 @@ onUnmounted(() => {
                         </div>
 
                         <div class="mortgage-insurance-promo p-3 rounded-4 mb-4 d-flex align-items-center gap-3">
-                             <div class="flex-grow-1">
-                                 <h4 class="fs-6 fw-bold mb-1 text-dark">{{ __('Mortgage Insurance') }}</h4>
-                                 <p class="text-muted small mb-0">{{ __('Save up to 40% on insurance cost') }}</p>
-                             </div>
-                             <div class="promo-image">
-                                 <img src="/storage/images/icons/insurance-card.webp" alt="Promo">
-                             </div>
+                            <div class="flex-grow-1">
+                                <h4 class="fs-6 fw-bold mb-1 text-dark">{{ __('Mortgage Insurance') }}</h4>
+                                <p class="text-muted small mb-0">{{ __('Save up to 40% on insurance cost') }}</p>
+                            </div>
+                            <div class="promo-image">
+                                <img src="/storage/images/icons/insurance-card.webp" alt="Promo">
+                            </div>
                         </div>
 
                         <div class="mortgage-rates-list">
-                            <div v-for="(type, index) in [__('Secondary housing'), __('New building'), __('Family'), __('Home construction')]" 
-                                 :key="index" class="d-flex align-items-center gap-3 mb-4">
+                            <div v-for="(type, index) in [__('Secondary housing'), __('New building'), __('Family'), __('Home construction')]" :key="index" class="d-flex align-items-center gap-3 mb-4">
                                 <span class="small fw-bold text-dark text-nowrap" style="min-width: 130px;">{{ type }}</span>
                                 <div class="flex-grow-1">
                                     <div class="progress" style="height: 6px; background: rgba(var(--bs-primary-rgb), 0.05);">
-                                        <div class="progress-bar rounded-pill" 
-                                             :style="`width: ${[85, 75, 30, 90][index]}%; background: var(--bs-primary);`" 
-                                             role="progressbar"></div>
+                                        <div class="progress-bar rounded-pill" :style="`width: ${[85, 75, 30, 90][index]}%; background: var(--bs-primary);`" role="progressbar"></div>
                                     </div>
                                 </div>
                                 <span class="small fw-bold text-primary">{{ [16.9, 15.0, 5.9, 17.8][index] }}%</span>

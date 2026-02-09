@@ -21,4 +21,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     // Product management (nested under organizations)
     Route::resource('organizations.products', ProductController::class)->except(['show']);
+
+    // News Post management
+    Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
+    Route::post('upload/image', [\App\Http\Controllers\Admin\UploadController::class, 'image'])->name('upload.image');
+
+    // Comment management
+    Route::resource('comments', \App\Http\Controllers\Admin\CommentController::class)->only(['index', 'update', 'destroy']);
 });

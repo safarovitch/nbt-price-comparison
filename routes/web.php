@@ -31,11 +31,15 @@ Route::middleware('web')->group(function () {
     Route::get('ratings', [\App\Http\Controllers\RatingsController::class, 'index'])->name('ratings');
     Route::post('ratings', [\App\Http\Controllers\RatingsController::class, 'store'])->name('ratings.store');
 
+    // ATMs & Branches
+    Route::get('atms', [\App\Http\Controllers\DeviceLocationController::class, 'index'])->name('atms');
+
     // Organization search for dropdown
     Route::get('api/ratings/organizations', [\App\Http\Controllers\RatingsController::class, 'searchOrganizations'])->name('api.ratings.organizations');
 
-    // Exchange
-    Route::get('exchange', [\App\Http\Controllers\ExchangeController::class, 'index'])->name('exchange');
+    // News Routes
+    Route::get('news', [\App\Http\Controllers\NewsController::class, 'index'])->name('news');
+    Route::get('news/{slug}', [\App\Http\Controllers\NewsController::class, 'show'])->name('news.show');
 
     // Application API routes
     Route::post('api/otp/send', [\App\Http\Controllers\ApplicationController::class, 'sendOtp'])->name('api.otp.send');
@@ -88,6 +92,13 @@ Route::middleware('web')->group(function () use ($localePattern) {
 
             // Exchange
             Route::get('exchange', [\App\Http\Controllers\ExchangeController::class, 'index'])->name('exchange.localized');
+
+            // ATMs & Branches
+            Route::get('atms', [\App\Http\Controllers\DeviceLocationController::class, 'index'])->name('atms.localized');
+
+            // News
+            Route::get('news', [\App\Http\Controllers\NewsController::class, 'index'])->name('news.localized');
+            Route::get('news/{slug}', [\App\Http\Controllers\NewsController::class, 'show'])->name('news.show.localized');
 
             require base_path('vendor/laravel/fortify/routes/routes.php');
 

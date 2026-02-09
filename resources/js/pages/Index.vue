@@ -4,6 +4,8 @@ import GuestLayout from '@/layouts/GuestLayout.vue';
 import ExchangeRateTable from '@/components/ExchangeRateTable.vue';
 import MarketMonitoring from '@/components/MarketMonitoring.vue';
 import ServicesSection from '@/components/ServicesSection.vue';
+import LatestComments from '@/components/LatestComments.vue';
+import LatestNews from '@/components/LatestNews.vue';
 import GlobalSearch from '@/components/GlobalSearch.vue';
 import { useTrans } from '@/composables/useTrans';
 
@@ -40,6 +42,8 @@ interface MarketMonitoringData {
 
 const props = defineProps<{
     marketMonitoring?: MarketMonitoringData;
+    latestComments?: Array<any>;
+    latestNews?: Array<any>;
 }>();
 </script>
 
@@ -168,10 +172,11 @@ const props = defineProps<{
         <!-- Hero Services Section End -->
 
         <!-- Our Services Section Start -->
-        <div class="services-section py-5 bg-white">
+        <div class="services-section py-5 bg-light mt-5">
             <div class="container">
-                <div class="section-header mb-4 text-center">
+                <div class="section-header mb-4 d-flex justify-content-between">
                     <h2>{{ __('Our Services') }}</h2>
+                    <p>{{ __('Use our tools for your financial calculations.') }}</p>
                 </div>
 
                 <ServicesSection />
@@ -182,5 +187,13 @@ const props = defineProps<{
         <!-- Market Monitoring Section Start -->
         <MarketMonitoring :credits="props.marketMonitoring?.credits ?? []" :deposits="props.marketMonitoring?.deposits ?? []" />
         <!-- Market Monitoring Section End -->
+
+        <!-- Latest News Section Start -->
+        <LatestNews :posts="props.latestNews ?? []" />
+        <!-- Latest News Section End -->
+
+        <!-- Latest Comments Section Start -->
+        <LatestComments :comments="props.latestComments ?? []" />
+        <!-- Latest Comments Section End -->
     </GuestLayout>
 </template>

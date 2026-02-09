@@ -25,16 +25,51 @@ class ExchangeRateController extends Controller
         ];
 
         $rssUrl = $rssUrlMap[$locale] ?? $rssUrlMap['en'];
-        $cacheKey = "exchange_rates_{$locale}";
+
+        $latestKey = "exchange_rates_latest_{$locale}";
+        $previousKey = "exchange_rates_previous_{$locale}";
+        $cooldownKey = "exchange_rates_cooldown_{$locale}";
 
         try {
-            $rates = Cache::remember($cacheKey, now()->addMinutes(30), function () use ($rssUrl) {
-                return $this->fetchAndParseRss($rssUrl);
-            });
+            // Check cooldown to avoid hammering the RSS feed
+            if (!Cache::has($cooldownKey)) {
+                $newData = $this->fetchAndParseRss($rssUrl);
+                $latestData = Cache::get($latestKey);
+
+                // If we have no latest data, or the new data has different rates/date
+                if (!$latestData || $this->hasRatesChanged($latestData, $newData)) {
+                    // Move current latest to previous (if exists)
+                    if ($latestData) {
+                        Cache::put($previousKey, $latestData); // Store previous indefinitely? Or for a day? Let's say forever for simplicity or until overwritten
+                    }
+
+                    // Update latest
+                    Cache::put($latestKey, $newData);
+                }
+
+                // Set cooldown for 30 minutes
+                Cache::put($cooldownKey, true, now()->addMinutes(30));
+            }
+
+            // Retrieve data
+            $latest = Cache::get($latestKey);
+            $previous = Cache::get($previousKey);
+
+            if (!$latest) {
+                // Should not happen if fetch succeeded, but as fallback fetch now
+                $latest = $this->fetchAndParseRss($rssUrl);
+                Cache::put($latestKey, $latest);
+                Cache::put($cooldownKey, true, now()->addMinutes(30));
+            }
+
+            // Enrich rates with trends
+            if ($latest && isset($latest['rates'])) {
+                $latest['rates'] = $this->calculateTrends($latest['rates'], $previous['rates'] ?? []);
+            }
 
             return response()->json([
                 'success' => true,
-                'data' => $rates,
+                'data' => $latest,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch exchange rates', [
@@ -49,6 +84,52 @@ class ExchangeRateController extends Controller
                 'data' => [],
             ], 500);
         }
+    }
+
+    /**
+     * Check if rates have changed
+     */
+    private function hasRatesChanged(array $oldData, array $newData): bool
+    {
+        // Simple comparison of pubDate first
+        if (($oldData['pubDate'] ?? '') !== ($newData['pubDate'] ?? '')) {
+            return true;
+        }
+
+        // Deep comparison of rates if pubDate is unreliable or same (sometimes RSS pubDate doesn't change but rates might?)
+        // Let's assume pubDate is reliable enough for RSS feeds from a bank. 
+        // But to be safe, we can check a checksum of rates.
+        return json_encode($oldData['rates']) !== json_encode($newData['rates']);
+    }
+
+    /**
+     * Calculate trends by comparing current and previous rates
+     */
+    private function calculateTrends(array $currentRates, array $previousRates): array
+    {
+        // Index previous rates by code for O(1) lookup
+        $prevMap = [];
+        foreach ($previousRates as $rate) {
+            $prevMap[$rate['code']] = $rate['rate'];
+        }
+
+        foreach ($currentRates as &$rate) {
+            $code = $rate['code'];
+            $rate['change'] = 0; // Default: No change
+
+            if (isset($prevMap[$code])) {
+                $prevRate = $prevMap[$code];
+                $currRate = $rate['rate'];
+
+                if ($currRate > $prevRate) {
+                    $rate['change'] = 1; // Increased (Up arrow)
+                } elseif ($currRate < $prevRate) {
+                    $rate['change'] = -1; // Decreased (Down arrow)
+                }
+            }
+        }
+
+        return $currentRates;
     }
 
     /**

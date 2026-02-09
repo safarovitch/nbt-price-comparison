@@ -32,9 +32,12 @@ return new class extends Migration
             $table->string('base_url')->nullable();
             $table->string('api_key')->nullable();
             $table->string('sync_type')->nullable();
+            $table->string('last_sync_status')->default('idle');
+            $table->text('last_sync_error')->nullable();
             $table->string('status')->default('active');
             $table->json('endpoints')->nullable();
             $table->timestamp('last_synced_at')->nullable();
+            $table->timestamp('sync_started_at')->nullable();
             $table->timestamps();
         });
     }

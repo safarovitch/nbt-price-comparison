@@ -95,6 +95,11 @@ const menuItems = computed(() => [
         items: [
             { name: __('Migrant Services'), icon: 'fa-solid fa-passport' },
         ]
+    },
+    {
+        label: __('News'),
+        link: '/news',
+        items: []
     }
 ]);
 

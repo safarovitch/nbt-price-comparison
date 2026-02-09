@@ -11,11 +11,14 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
-    use CanComment, HasRoles;
+    use CanComment, HasRoles, InteractsWithMedia;
 
 
     /**
@@ -49,6 +52,7 @@ class User extends Authenticatable
         return $this->isAdmin;
     }
 
+
     /**
      * Get the attributes that should be cast.
      *
@@ -61,5 +65,10 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    public function news()
+    {
+        return $this->hasMany(News::class);
     }
 }

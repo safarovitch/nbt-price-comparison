@@ -16,7 +16,7 @@ const { __ } = useTrans();
                 <!-- Column 1: Data Protection -->
                 <div class="col-lg-4">
                     <div class="security-card bg-light-gray">
-                        <h3 style="width:160px">{{ __('Your personal data is securely protected') }}</h3>
+                        <h3 style="width:220px">{{ __('Your personal data is securely protected') }}</h3>
                         <ul class="security-list">
                             <li>
                                 <i class="fa-regular fa-square-check text-success"></i>
@@ -39,7 +39,7 @@ const { __ } = useTrans();
                     <div class="security-card bg-light-gray">
                         <div class="d-flex align-items-start gap-3">
                             <img src="/storage/images/icons/shield-icon.webp" alt="Security" width="32">
-                            <h3 style="width:160px">{{ __('Important security rules') }}</h3>
+                            <h3 style="width:220px">{{ __('Important security rules') }}</h3>
                         </div>
                         <ul class="security-list mt-1">
                             <li>

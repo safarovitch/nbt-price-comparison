@@ -6,6 +6,7 @@ interface ExchangeRate {
     code: number;
     unit: number;
     rate: number;
+    change?: number; // 1: increase, -1: decrease, 0: no change
 }
 
 interface ExchangeRateData {
@@ -37,7 +38,7 @@ const fetchJson = async <T>(url: string): Promise<T> => {
 };
 
 export const useExchangeRates = () => {
-    const { props } = usePage<{ locale: string }>();
+    const { props } = usePage<any>();
 
     const fetchExchangeRates = async (): Promise<void> => {
         try {

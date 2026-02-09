@@ -47,7 +47,7 @@ const normalizedValue = computed<TranslatableValue>(() => {
 const updateValue = (lang: string, value: string) => {
     emit('update:modelValue', {
         ...normalizedValue.value,
-        [lang]: value || null,
+        [lang]: value, // Removed || null to prevent dropping keys
     });
 };
 
@@ -76,7 +76,7 @@ const getValue = (lang: string): string => {
 
         <!-- Input Fields -->
         <div v-for="lang in languages" :key="lang.code">
-            <div v-show="activeTab === lang.code">
+            <div v-if="activeTab === lang.code">
                 <textarea v-if="type === 'textarea'" :value="getValue(lang.code)" @input="updateValue(lang.code, ($event.target as HTMLTextAreaElement).value)" class="form-control" :rows="rows || 3" :placeholder="`${placeholder || ''} (${lang.label})`" :required="required && lang.code === 'ru'"></textarea>
                 <input v-else :value="getValue(lang.code)" @input="updateValue(lang.code, ($event.target as HTMLInputElement).value)" type="text" class="form-control" :placeholder="`${placeholder || ''} (${lang.label})`" :required="required && lang.code === 'ru'" />
             </div>

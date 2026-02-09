@@ -55,11 +55,50 @@ class HomeController extends Controller
                 ] : null,
             ]);
 
+        // Get latest comments
+        $latestComments = \Actuallymab\LaravelComment\Models\Comment::where('approved', true)
+            ->with(['commentable', 'commented'])
+            ->latest()
+            ->limit(6)
+            ->get()
+            ->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'comment' => $comment->comment,
+                    'rate' => $comment->rate,
+                    'created_at' => $comment->created_at->diffForHumans(),
+                    'user_name' => $comment->commented ? $comment->commented->name : 'Anonymous',
+                    'organization' => $comment->commentable ? [
+                        'name' => $comment->commentable->name,
+                        'logo' => method_exists($comment->commentable, 'getFirstMediaUrl') ? $comment->commentable->getFirstMediaUrl('logo', 'preview') : null,
+                    ] : null,
+                ];
+            });
+
+        $latestNews = \App\Models\News::published()
+            ->with(['media', 'topic'])
+            ->latest()
+            ->limit(3)
+            ->get()
+            ->map(function ($newsItem) {
+                return [
+                    'id' => $newsItem->id,
+                    'title' => $newsItem->title,
+                    'slug' => $newsItem->slug,
+                    'short_description' => $newsItem->summary,
+                    'posted_at' => $newsItem->published_at,
+                    'image_url' => $newsItem->getFirstMediaUrl('featured_image'),
+                    'categories' => $newsItem->topic ? [['name' => $newsItem->topic->name]] : [],
+                ];
+            });
+
         return Inertia::render('Index', [
             'marketMonitoring' => [
                 'credits' => $creditProducts,
                 'deposits' => $depositProducts,
             ],
+            'latestComments' => $latestComments,
+            'latestNews' => $latestNews,
         ]);
     }
 }

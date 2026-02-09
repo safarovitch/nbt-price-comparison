@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
-import TranslatableInput from '@/components/TranslatableInput.vue';
+import FormLanguageSwitcher from '@/components/FormLanguageSwitcher.vue';
+import { useTranslatableForm } from '@/composables/useTranslatableForm';
 import { useForm } from '@inertiajs/vue3';
 import { Save } from 'lucide-vue-next';
 
@@ -15,6 +16,8 @@ const props = defineProps<{
     submitLabel: string;
     onSubmit: (form: any) => void;
 }>();
+
+const { currentLang, availableLanguages, syncField, hasContent } = useTranslatableForm('ru');
 
 // Helper to normalize translatable field from organization prop
 const getTranslatable = (field: string): TranslatableValue => {
@@ -54,13 +57,40 @@ const form = useForm({
 const submit = () => {
     props.onSubmit(form);
 };
+
+// Check for validation errors per language
+const checkError = (langCode: string) => {
+    return !!((form.errors as any)[`name.${langCode}`] ||
+        (form.errors as any)[`description.${langCode}`] ||
+        (form.errors as any)[`legal_address.${langCode}`]);
+};
+
+// Check for content per language
+const checkContent = (langCode: string) => {
+    return hasContent(form, 'name', langCode) ||
+        hasContent(form, 'description', langCode) ||
+        hasContent(form, 'legal_address', langCode);
+};
 </script>
 
 <template>
     <form @submit.prevent="submit" class="row g-3">
+        <!-- Global Language Switcher -->
+        <div class="col-12">
+            <FormLanguageSwitcher v-model="currentLang" :languages="availableLanguages" :has-error="checkError" :has-content="checkContent" />
+        </div>
+
         <!-- Translatable Name -->
         <div class="col-12">
-            <TranslatableInput v-model="form.name" label="Organization Name" placeholder="e.g. National Bank" :required="true" :error="form.errors.name" />
+            <label class="form-label fw-semibold">Organization Name <span class="text-danger">*</span></label>
+            <input 
+                v-model="(form.name as any)[currentLang]" 
+                type="text" 
+                class="form-control" 
+                :placeholder="`e.g. National Bank (${availableLanguages.find(l => l.code === currentLang)?.label})`"
+                @blur="syncField(form, 'name')"
+            >
+            <InputError :message="(form.errors as any)[`name.${currentLang}`]" />
         </div>
 
         <div class="col-md-4">
@@ -125,12 +155,28 @@ const submit = () => {
 
         <!-- Translatable Description -->
         <div class="col-12">
-            <TranslatableInput v-model="form.description" label="Description" type="textarea" placeholder="Organization description" :rows="3" :error="form.errors.description" />
+            <label class="form-label fw-semibold">Description</label>
+            <textarea 
+                v-model="(form.description as any)[currentLang]" 
+                class="form-control" 
+                rows="3" 
+                :placeholder="`Organization description (${availableLanguages.find(l => l.code === currentLang)?.label})`"
+                @blur="syncField(form, 'description')"
+            ></textarea>
+            <InputError :message="(form.errors as any)[`description.${currentLang}`]" />
         </div>
 
         <!-- Translatable Legal Address -->
         <div class="col-12">
-            <TranslatableInput v-model="form.legal_address" label="Legal Address" type="textarea" placeholder="Legal address" :rows="2" :error="form.errors.legal_address" />
+            <label class="form-label fw-semibold">Legal Address</label>
+            <textarea 
+                v-model="(form.legal_address as any)[currentLang]" 
+                class="form-control" 
+                rows="2" 
+                :placeholder="`Legal address (${availableLanguages.find(l => l.code === currentLang)?.label})`"
+                @blur="syncField(form, 'legal_address')"
+            ></textarea>
+            <InputError :message="(form.errors as any)[`legal_address.${currentLang}`]" />
         </div>
 
         <div class="col-md-6">

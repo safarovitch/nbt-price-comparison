@@ -98,4 +98,9 @@ class Organization extends Model implements HasMedia
     {
         return $this->hasMany(Product::class);
     }
+
+    public function deviceLocations(): HasMany
+    {
+        return $this->hasMany(DeviceLocation::class, 'organization_uuid', 'uuid');
+    }
 }

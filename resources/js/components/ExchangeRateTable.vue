@@ -58,17 +58,17 @@ const getCurrencyInfo = (code: number | string): { code: string; flag: string } 
         '981': { code: 'KGS', flag: 'kg' }, // Kyrgyzstan
         '860': { code: 'UZS', flag: 'uz' }, // Uzbekistan
         '356': { code: 'INR', flag: 'in' },
-        '364': { code: 'IRR', flag: 'ir' }, 
+        '364': { code: 'IRR', flag: 'ir' },
         '368': { code: 'IQD', flag: 'iq' },
         '376': { code: 'ILS', flag: 'il' },
-        '392': { code: 'JPY', flag: 'jp' }, 
-        '380': { code: 'JPY', flag: 'jp' }, 
+        '392': { code: 'JPY', flag: 'jp' },
+        '380': { code: 'JPY', flag: 'jp' },
         '756': { code: 'CHF', flag: 'ch' },
         '826': { code: 'GBP', flag: 'gb' },
         '949': { code: 'TRY', flag: 'tr' },
         '933': { code: 'BYN', flag: 'by' },
-        '972': { code: 'TJS', flag: 'tj' }, 
-        '417': { code: 'KGS', flag: 'kg' }, 
+        '972': { code: 'TJS', flag: 'tj' },
+        '417': { code: 'KGS', flag: 'kg' },
         '36': { code: 'AUD', flag: 'au' },  // 036 -> 36
         '124': { code: 'CAD', flag: 'ca' },
         '208': { code: 'DKK', flag: 'dk' },
@@ -81,7 +81,7 @@ const getCurrencyInfo = (code: number | string): { code: string; flag: string } 
         '752': { code: 'SEK', flag: 'se' },
         '702': { code: 'SGD', flag: 'sg' },
         '764': { code: 'THB', flag: 'th' },
-        '946': { code: 'RON', flag: 'ro' }, 
+        '946': { code: 'RON', flag: 'ro' },
         '975': { code: 'BGN', flag: 'bg' },
         '977': { code: 'BAM', flag: 'ba' },
         '985': { code: 'PLN', flag: 'pl' },
@@ -95,7 +95,7 @@ const getCurrencyInfo = (code: number | string): { code: string; flag: string } 
         '784': { code: 'AED', flag: 'ae' },
         '682': { code: 'SAR', flag: 'sa' },
     };
-    
+
     return map[String(code)] ?? { code: String(code), flag: '' };
 };
 </script>
@@ -106,11 +106,11 @@ const getCurrencyInfo = (code: number | string): { code: string; flag: string } 
             <h3 class="cart-title fs-6">{{ __('Exchange Rates') }}</h3>
             <span class="date">{{ new Date().toLocaleDateString('ru-RU') }}</span>
         </div>
-        
+
         <div v-if="loading" class="text-center py-3">
             <span class="loader"></span>
         </div>
-        
+
         <div v-else-if="error" class="text-center text-danger py-3">
             {{ error }}
         </div>
@@ -127,12 +127,7 @@ const getCurrencyInfo = (code: number | string): { code: string; flag: string } 
                     <tr v-for="rate in exchangeRates.rates" :key="rate.code">
                         <td>
                             <div class="currency-info-row">
-                                <img 
-                                    v-if="getCurrencyInfo(rate.code).flag"
-                                    :src="`https://flagcdn.com/w40/${getCurrencyInfo(rate.code).flag}.png`" 
-                                    :alt="getCurrencyInfo(rate.code).code"
-                                    class="currency-flag"
-                                >
+                                <img v-if="getCurrencyInfo(rate.code).flag" :src="`https://flagcdn.com/w40/${getCurrencyInfo(rate.code).flag}.png`" :alt="getCurrencyInfo(rate.code).code" class="currency-flag">
                                 <div class="currency-text">
                                     <span class="currency-code">{{ getCurrencyInfo(rate.code).code }}</span>
                                     <span class="currency-name">{{ rate.name }}</span>
@@ -141,6 +136,15 @@ const getCurrencyInfo = (code: number | string): { code: string; flag: string } 
                         </td>
                         <td class="text-right font-weight-bold">
                             {{ formatRate(rate.rate, rate.unit) }}
+                            <span v-if="rate.change === 1" class="ms-1" title="Increased">
+                                <i class="fa fa-arrow-trend-up text-success"></i>
+                            </span>
+                            <span v-else-if="rate.change === 0" class="ms-1" title="Decreased">
+                                <i class="fa px-2"></i>
+                            </span>
+                            <span v-else-if="rate.change === -1" class="ms-1" title="Decreased">
+                                <i class="fa fa-arrow-trend-down text-danger"></i>
+                            </span>
                         </td>
                     </tr>
                 </tbody>
@@ -154,7 +158,8 @@ const getCurrencyInfo = (code: number | string): { code: string; flag: string } 
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Ensure card respects boundary */
+    overflow: hidden;
+    /* Ensure card respects boundary */
 }
 
 .rates-table-container {
@@ -162,7 +167,8 @@ const getCurrencyInfo = (code: number | string): { code: string; flag: string } 
     flex-grow: 1;
     /* Custom scrollbar for better look */
     scrollbar-width: thin;
-    padding-right: 4px; /* Avoid scrollbar overlapping content */
+    padding-right: 4px;
+    /* Avoid scrollbar overlapping content */
 }
 
 .rates-table-container::-webkit-scrollbar {
@@ -178,8 +184,10 @@ const getCurrencyInfo = (code: number | string): { code: string; flag: string } 
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px; /* Slightly reduced margin */
-    flex-shrink: 0; /* Header shouldn't shrink */
+    margin-bottom: 8px;
+    /* Slightly reduced margin */
+    flex-shrink: 0;
+    /* Header shouldn't shrink */
 }
 
 .card-header h3 {
@@ -228,7 +236,7 @@ const getCurrencyInfo = (code: number | string): { code: string; flag: string } 
     width: 24px;
     height: auto;
     border-radius: 2px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .currency-text {

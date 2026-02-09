@@ -6,7 +6,7 @@ import { dashboard } from '@/routes';
 import admin from '@/routes/admin';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Building2, Folder, LayoutGrid, Menu, X } from 'lucide-vue-next';
+import { BookOpen, Building2, Folder, LayoutGrid, Menu, MessageSquare, Newspaper, X } from 'lucide-vue-next';
 import { ref } from 'vue';
 import AppLogo from './AppLogo.vue';
 
@@ -20,6 +20,16 @@ const mainNavItems: NavItem[] = [
         title: 'Organizations',
         href: admin.organizations.index().url,
         icon: Building2,
+    },
+    {
+        title: 'News',
+        href: '/admin/news',
+        icon: Newspaper,
+    },
+    {
+        title: 'Comments',
+        href: '/admin/comments',
+        icon: MessageSquare,
     },
 ];
 

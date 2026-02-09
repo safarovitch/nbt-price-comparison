@@ -140,4 +140,5 @@ class ApplicationController extends Controller
             ],
         ]);
     }
+    // boshluk
 }

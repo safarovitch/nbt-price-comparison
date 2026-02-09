@@ -77,6 +77,10 @@ class Organization extends Model implements HasMedia
             'auth_value' => 'encrypted',
             'last_synced_at' => 'datetime',
             'endpoints' => 'array',
+            'emails' => 'array',
+            'phones' => 'array',
+            'mobile_apps' => 'array',
+            'social_media' => 'array',
             'sync_started_at' => 'datetime',
         ];
     }

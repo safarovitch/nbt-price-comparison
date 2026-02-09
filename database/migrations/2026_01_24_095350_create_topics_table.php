@@ -11,7 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('posts', 'news');
+        Schema::create('topics', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('slug')->unique();
+            $table->string('name');
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     /**
@@ -19,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('news', 'posts');
+        Schema::dropIfExists('topics');
     }
 };

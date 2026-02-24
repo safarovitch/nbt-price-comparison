@@ -18,10 +18,9 @@ defineProps<{
                 :href="index()"
                 class="d-flex align-items-center gap-2 align-self-center fw-medium text-decoration-none"
             >
-                <div class="d-flex align-items-center justify-content-center" style="width: 2.25rem; height: 2.25rem;">
+                <div class="d-flex align-items-center justify-content-center" style="height: 3rem;">
                     <AppLogoIcon
-                        style="width: 2.25rem; height: 2.25rem; fill: currentColor;"
-                        class="text-dark"
+                        style="height: 3rem;"
                     />
                 </div>
             </Link>

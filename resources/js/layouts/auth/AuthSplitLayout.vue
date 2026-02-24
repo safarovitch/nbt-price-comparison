@@ -25,7 +25,7 @@ defineProps<{
                 :href="index()"
                 class="relative z-20 flex items-center text-lg font-medium"
             >
-                <AppLogoIcon class="mr-2 size-8 fill-current text-white" />
+                <AppLogoIcon class="mr-2" style="height: 2.5rem;" />
                 {{ name }}
             </Link>
             <div v-if="quote" class="relative z-20 mt-auto">

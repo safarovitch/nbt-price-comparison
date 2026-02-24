@@ -21,12 +21,11 @@ defineProps<{
                         class="d-flex flex-column align-items-center gap-2 fw-medium text-decoration-none"
                     >
                         <div
-                            class="mb-2 d-flex align-items-center justify-content-center rounded"
-                            style="width: 2.25rem; height: 2.25rem;"
+                            class="mb-2 d-flex align-items-center justify-content-center"
+                            style="height: 3rem;"
                         >
                             <AppLogoIcon
-                                class="text-dark"
-                                style="width: 2.25rem; height: 2.25rem; fill: currentColor;"
+                                style="height: 3rem;"
                             />
                         </div>
                         <span class="visually-hidden">{{ title }}</span>

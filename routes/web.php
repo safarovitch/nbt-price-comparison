@@ -60,6 +60,7 @@ Route::middleware('web')->group(function () {
 
     Route::get('login', fn() => redirect('/' . app()->getLocale() . '/login'));
     Route::get('register', fn() => redirect('/' . app()->getLocale() . '/register'));
+    Route::get('exchange', fn() => redirect('/' . app()->getLocale() . '/exchange'));
 
     // Admin routes (no locale prefix needed)
     require __DIR__ . '/admin.php';
